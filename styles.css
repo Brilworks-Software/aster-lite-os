@@ -252,7 +252,8 @@ body {
     font-size: 20px;
     cursor: pointer;
     transition: var(--transition);
-    position: relative;
+    position: relative !important;
+    /* Ensure children can position relative to this */
 }
 
 .icon-btn:hover {
@@ -1445,6 +1446,15 @@ input:checked+.slider:before {
         padding: 0 16px;
     }
 
+    .topbar-actions {
+        gap: 8px;
+    }
+
+    .icon-btn .notification-badge {
+        right: -2px;
+        top: -2px;
+    }
+
     .views-container {
         padding: 24px 16px;
     }
@@ -1512,6 +1522,20 @@ input:checked+.slider:before {
 
     .action-buttons button {
         flex: 1;
+    }
+
+    /* Ensure items table is scrollable on small screens */
+    .items-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .items-table {
+        min-width: 600px;
+    }
+
+    .doc-actions-bar select {
+        width: 100% !important;
     }
 }
 
