@@ -294,16 +294,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Populate Product Dropdowns
-    const populateProductSelects = () => {
-        const selects = ['newLeadProduct', 'stockProductSelect'];
-        selects.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.innerHTML = AppState.products.map(p => {
-                    const label = `${p.sku} - ${p.name}`;
-                    return `<option value="${label}">${label}</option>`;
-                }).join('');
-            }
+    const populateProductSelects = (container = document) => {
+        const selects = container.querySelectorAll('.product-select-target, #stockProductSelect');
+        selects.forEach(el => {
+            const currentVal = el.value;
+            el.innerHTML = AppState.products.map(p => {
+                const label = `${p.sku} - ${p.name}`;
+                return `<option value="${label}">${label}</option>`;
+            }).join('');
+            if (currentVal) el.value = currentVal;
         });
     };
     
@@ -627,25 +626,62 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Form Submissions (Modals) ---
+    // --- Multi-Item Lead Handling ---
+    const leadItemsContainer = document.getElementById('leadItemsContainer');
+    const btnAddLeadItem = document.getElementById('btnAddLeadItem');
+
+    const addLeadItemRow = () => {
+        const div = document.createElement('div');
+        div.className = 'lead-item-row';
+        div.style.display = 'grid';
+        div.style.gridTemplateColumns = '1fr 100px 40px';
+        div.style.gap = '10px';
+        div.style.alignItems = 'end';
+
+        div.innerHTML = `
+            <div class="form-group">
+                <select class="form-control product-select-target"></select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control qty-input" placeholder="Qty (e.g. 50x)">
+            </div>
+            <button type="button" class="icon-btn-small remove-item" style="height: 40px; border: 1px solid var(--border-light);"><i class='bx bx-trash'></i></button>
+        `;
+
+        leadItemsContainer.appendChild(div);
+        populateProductSelects(div);
+
+        div.querySelector('.remove-item').addEventListener('click', () => {
+            if (leadItemsContainer.children.length > 1) div.remove();
+        });
+    };
+
+    btnAddLeadItem?.addEventListener('click', addLeadItemRow);
+
     document.getElementById('btnSaveLead')?.addEventListener('click', async () => {
         const name = document.getElementById('newLeadName').value;
         const company = document.getElementById('newLeadCompany').value;
         const source = document.getElementById('newLeadSource').value;
         const assigned = document.getElementById('newLeadAssigned').value;
-        
-        const product = document.getElementById('newLeadProduct').value;
-        const qty = document.getElementById('newLeadQty').value;
         const notes = document.getElementById('newLeadNotes').value;
 
         if (!name) return alert('Lead name is required');
         
-        // Format requirement string
-        const req = `${qty ? qty + ' ' : ''}${product}${notes ? '\nNotes: ' + notes : ''}`;
+        // Collect Items
+        const rows = document.querySelectorAll('.lead-item-row');
+        let req = '';
+        rows.forEach((row, index) => {
+            const product = row.querySelector('.product-select-target').value;
+            const qty = row.querySelector('.qty-input').value;
+            req += `${qty ? qty + ' ' : ''}${product}${index < rows.length - 1 ? '\n' : ''}`;
+        });
+
+        if (notes) req += `\nNotes: ${notes}`;
         
         const newLead = {
-            id: Math.floor(Math.random() * 10000) + 5000, // Explicitly numeric ID for Supabase compatibility
+            id: Math.floor(Math.random() * 10000) + 5000, 
             date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            name, company, source, assigned, req, status: 'New'
+            name, company, source, assigned, req: req.trim(), status: 'New'
         };
         await insertLead(newLead);
         
@@ -702,6 +738,20 @@ document.addEventListener('DOMContentLoaded', () => {
         hideProductModal();
         renderInventory();
     });
+
+    // --- Lead Modal Open/Close ---
+    const btnAddLead = document.getElementById('btnAddLead');
+    btnAddLead?.addEventListener('click', () => {
+        document.getElementById('leadModal').classList.add('show');
+        // Reset and add first item row
+        leadItemsContainer.innerHTML = '';
+        addLeadItemRow();
+    });
+
+    const closeLeadModal = document.querySelector('#leadModal .bx-x')?.parentElement;
+    closeLeadModal?.addEventListener('click', () => document.getElementById('leadModal').classList.remove('show'));
+    document.querySelector('#leadModal .secondary-btn')?.addEventListener('click', () => document.getElementById('leadModal').classList.remove('show'));
+
 
     // Create App User
     const btnCreateUser = document.getElementById('btnCreateUser');

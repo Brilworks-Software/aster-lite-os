@@ -213,7 +213,7 @@
                                     <span class="slider"></span>
                                 </label>
                             </div>
-                            <button class="primary-btn" ><i class='bx bx-plus'></i> Add Lead</button>
+                            <button class="primary-btn" id="btnAddLead"><i class='bx bx-plus'></i> Add Lead</button>
                         </div>
                     </div>
 
@@ -648,18 +648,17 @@
                                             <option value="RJ">RJ (Sales)</option>
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Select Product</label>
-                                        <select id="newLeadProduct" class="form-control">
-                                            <!-- Populated from JS -->
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Quantity / Pack</label>
-                                        <input type="text" id="newLeadQty" class="form-control" placeholder="E.g. 100x or 5 Boxes">
+                                    <div class="form-group full-width" style="margin-top: 10px; padding: 16px; background: var(--bg-body); border-radius: 8px;">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                            <label style="font-weight: 600; color: var(--text-primary);">Line Items / Quote</label>
+                                            <button type="button" class="primary-btn-small" id="btnAddLeadItem" style="padding: 6px 12px; font-size: 13px;"><i class='bx bx-plus'></i> Add Item</button>
+                                        </div>
+                                        <div id="leadItemsContainer" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <!-- Dynamic items appear here -->
+                                        </div>
                                     </div>
                                     <div class="form-group full-width">
-                                        <label>Optional Notes</label>
+                                        <label>General Notes / Instructions</label>
                                         <textarea id="newLeadNotes" class="form-control" rows="2" placeholder="Any specific requirements or notes..."></textarea>
                                     </div>
                                 </div>
