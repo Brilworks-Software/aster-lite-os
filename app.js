@@ -297,10 +297,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const populateProductSelects = (container = document) => {
         const selects = container.querySelectorAll('.product-select-target, #stockProductSelect');
         const products = AppState.products || [];
+        console.log(`Populating ${selects.length} product selects with ${products.length} products.`);
+
         selects.forEach(el => {
             const currentVal = el.value;
             if (products.length === 0) {
-                el.innerHTML = '<option value="">(No products found)</option>';
+                el.innerHTML = '<option value="">(Loading products...)</option>';
                 return;
             }
             el.innerHTML = products.map(p => {
@@ -384,14 +386,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const getProducts = async () => {
+        console.log('Fetching products from DB...');
         if (dbClient) {
             const { data, error } = await dbClient.from('products').select('*').order('sku', { ascending: true });
             if (!error) {
+                console.log('Products fetched successfully:', data.length);
                 AppState.products = data;
                 populateProductSelects();
                 return data;
             }
+            console.error('Supabase error fetching products:', error);
         }
+        console.log('Falling back to local products...');
         const localProducts = initLocalDB().products;
         AppState.products = localProducts;
         populateProductSelects();
@@ -641,40 +647,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Form Submissions (Modals) ---
     // --- Multi-Item Lead Handling ---
-    const leadItemsContainer = document.getElementById('leadItemsContainer');
-    const btnAddLeadItem = document.getElementById('btnAddLeadItem');
-
     const addLeadItemRow = () => {
         const container = document.getElementById('leadItemsContainer');
-        if (!container) return;
+        if (!container) {
+            console.error('Lead items container not found!');
+            return;
+        }
 
         const div = document.createElement('div');
         div.className = 'lead-item-row';
         div.style.display = 'grid';
-        div.style.gridTemplateColumns = '1fr 100px 40px';
-        div.style.gap = '10px';
+        div.style.gridTemplateColumns = '1fr 120px 44px';
+        div.style.gap = '12px';
         div.style.alignItems = 'end';
-        div.style.marginBottom = '8px';
+        div.style.marginBottom = '12px';
+        div.style.padding = '8px';
+        div.style.background = 'white';
+        div.style.borderRadius = '8px';
+        div.style.border = '1px solid var(--border-light)';
 
         div.innerHTML = `
-            <div class="form-group">
-                <select class="form-control product-select-target"></select>
+            <div class="form-group" style="margin-bottom: 0;">
+                <label style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; display: block;">Select Product</label>
+                <select class="form-control product-select-target" style="width: 100%;"></select>
             </div>
-            <div class="form-group">
-                <input type="text" class="form-control qty-input" placeholder="Qty">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label style="font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; display: block;">Quantity</label>
+                <input type="text" class="form-control qty-input" placeholder="e.g. 50x" style="width: 100%;">
             </div>
-            <button type="button" class="icon-btn-small remove-item" style="height: 38px; border: 1px solid var(--border-light); border-radius: 6px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-trash'></i></button>
+            <button type="button" class="icon-btn-small remove-item" style="height: 42px; width: 44px; border: 1px solid var(--border-light); border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fff5f5; color: var(--danger);"><i class='bx bx-trash'></i></button>
         `;
 
         container.appendChild(div);
         populateProductSelects(div);
 
+        // Remove row logic
         div.querySelector('.remove-item').addEventListener('click', () => {
-            if (container.children.length > 1) div.remove();
+            if (container.children.length > 1) {
+                div.remove();
+            } else {
+                alert('At least one item is required.');
+            }
         });
     };
 
-    btnAddLeadItem?.addEventListener('click', addLeadItemRow);
+    // Re-bind Add Item button just in case
+    const btnAddLeadItemRef = document.getElementById('btnAddLeadItem');
+    btnAddLeadItemRef?.addEventListener('click', (e) => {
+        e.preventDefault();
+        addLeadItemRow();
+    });
 
     document.getElementById('btnSaveLead')?.addEventListener('click', async () => {
         const name = document.getElementById('newLeadName').value;
@@ -760,10 +782,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Lead Modal Open/Close ---
     const btnAddLead = document.getElementById('btnAddLead');
     btnAddLead?.addEventListener('click', () => {
-        document.getElementById('leadModal').classList.add('show');
-        // Reset and add first item row
-        leadItemsContainer.innerHTML = '';
-        addLeadItemRow();
+        const modal = document.getElementById('leadModal');
+        const container = document.getElementById('leadItemsContainer');
+        if (modal && container) {
+            modal.classList.add('show');
+            // Reset and add first item row
+            container.innerHTML = '';
+            addLeadItemRow();
+            
+            // Clear other fields
+            document.getElementById('newLeadName').value = '';
+            document.getElementById('newLeadCompany').value = '';
+            document.getElementById('newLeadNotes').value = '';
+        }
     });
 
     const closeLeadModal = document.querySelector('#leadModal .bx-x')?.parentElement;
