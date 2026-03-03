@@ -165,28 +165,28 @@
                             <div class="stat-icon"><i class='bx bx-user-pin'></i></div>
                             <div class="stat-info">
                                 <h3>New Leads</h3>
-                                <p class="value">12</p>
+                                <p class="value" id="stat-new-leads">0</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon"><i class='bx bx-receipt'></i></div>
                             <div class="stat-info">
                                 <h3>Pending Quotes</h3>
-                                <p class="value">5</p>
+                                <p class="value" id="stat-pending-quotes">0</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon"><i class='bx bx-package'></i></div>
                             <div class="stat-info">
                                 <h3>Orders to Dispatch</h3>
-                                <p class="value">8</p>
+                                <p class="value" id="stat-orders-dispatch">0</p>
                             </div>
                         </div>
                         <div class="stat-card warning">
                             <div class="stat-icon"><i class='bx bx-error-circle'></i></div>
                             <div class="stat-info">
                                 <h3>Defective Stock</h3>
-                                <p class="value">3 Items</p>
+                                <p class="value" id="stat-defective-stock">0 Items</p>
                             </div>
                         </div>
                     </div>
@@ -561,7 +561,7 @@
                             <div class="modal-body">
                                 <div class="form-group" style="margin-bottom: 20px;">
                                     <label>Select Product</label>
-                                    <select class="form-control">
+                                    <select class="form-control" id="stockProductSelect">
                                         <option>SKU-1001 - LED Panel 12W Square</option>
                                         <option>SKU-1002 - LED Panel 15W Round</option>
                                         <option>SKU-2005 - Strip Light 5m RGB</option>

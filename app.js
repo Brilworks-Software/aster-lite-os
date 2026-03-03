@@ -367,6 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </tr>
             `;
         });
+        renderDashboard();
     };
 
     const renderOrders = async () => {
@@ -425,6 +426,44 @@ document.addEventListener('DOMContentLoaded', () => {
         
         kanbanWrapper.innerHTML = html;
         attachDragEvents();
+        renderDashboard();
+    };
+
+    const renderDashboard = async () => {
+        const leads = await getLeads();
+        const orders = await getOrders();
+
+        const statNewLeads = document.getElementById('stat-new-leads');
+        const statPendingQuotes = document.getElementById('stat-pending-quotes');
+        const statOrdersDispatch = document.getElementById('stat-orders-dispatch');
+        const statDefectiveStock = document.getElementById('stat-defective-stock');
+
+        if (statNewLeads) {
+            const newLeadsCount = leads.filter(l => l.status === 'New').length;
+            statNewLeads.innerText = newLeadsCount;
+        }
+
+        if (statPendingQuotes) {
+            const pendingQuotesCount = orders.filter(o => o.status === 'quote').length;
+            statPendingQuotes.innerText = pendingQuotesCount;
+        }
+
+        if (statOrdersDispatch) {
+            const ordersToDispatchCount = orders.filter(o => o.status === 'order' || o.status === 'dispatch').length;
+            statOrdersDispatch.innerText = ordersToDispatchCount;
+        }
+
+        if (statDefectiveStock) {
+            // Count defective items from the static table or mock for now
+            // For a better experience, we sum up the defective pills in the inventory table
+            const defectivePills = document.querySelectorAll('.stock-defective');
+            let totalDefective = 0;
+            defectivePills.forEach(pill => {
+                const val = parseInt(pill.innerText.replace(/,/g, '')) || 0;
+                totalDefective += val;
+            });
+            statDefectiveStock.innerText = totalDefective + ' Items';
+        }
     };
 
     // --- Kanban Logic ---
@@ -726,12 +765,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Modal Management (Open/Close Handlers) ---
     // Add Lead
-    const btnAddLead = document.querySelector('.page-header .primary-btn'); // Add Lead button (doesn't have an ID, but it's the primary button in leads view)
     const viewLeadsHeaderBtn = document.querySelector('#view-leads .primary-btn');
     const leadModal = document.getElementById('leadModal');
     if (viewLeadsHeaderBtn && leadModal) {
         viewLeadsHeaderBtn.addEventListener('click', () => {
             leadModal.classList.add('show');
+            setTimeout(() => document.getElementById('newLeadName')?.focus(), 50);
         });
     }
     
@@ -741,6 +780,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnNewOrder && orderModal) {
         btnNewOrder.addEventListener('click', () => {
             orderModal.classList.add('show');
+            setTimeout(() => document.getElementById('newOrderClient')?.focus(), 50);
         });
     }
 
@@ -750,6 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnAdjustStock && stockModal) {
         btnAdjustStock.addEventListener('click', () => {
             stockModal.classList.add('show');
+            setTimeout(() => document.getElementById('stockProductSelect')?.focus(), 50);
         });
     }
 
