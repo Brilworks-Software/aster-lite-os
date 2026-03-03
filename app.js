@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const navItems = document.querySelectorAll('.sidebar .nav-item');
     const views = document.querySelectorAll('.view');
 
-    const switchView = (targetView) => {
+    function switchView(targetView) {
         if(!targetView) return;
 
         // Update state
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(DB_KEY, JSON.stringify(data));
     };
 
-    const getLeads = async () => {
+    async function getLeads() {
         if (dbClient) {
             const { data, error } = await dbClient.from('leads').select('*').order('id', { ascending: false });
             if (!error) return data;
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return initLocalDB().leads;
     };
 
-    const getOrders = async () => {
+    async function getOrders() {
         if (dbClient) {
             const { data, error } = await dbClient.from('orders').select('*').order('id', { ascending: false });
             if (!error) return data;
@@ -388,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return initLocalDB().orders;
     };
 
-    const getProducts = async () => {
+    async function getProducts() {
         console.log('Fetching products from DB...');
         if (dbClient) {
             const { data, error } = await dbClient.from('products').select('*').order('sku', { ascending: true });
@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (order) { order.status = newStatus; saveLocalDB(db); }
     };
 
-    const renderLeads = async () => {
+    async function renderLeads() {
         const leads = await getLeads();
         const tbody = document.getElementById('leadsTableBody');
         if (!tbody) return;
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDashboard();
     };
 
-    const renderInventory = async () => {
+    async function renderInventory() {
         const products = await getProducts();
         const tbody = document.querySelector('#view-inventory tbody');
         if (!tbody) return;
@@ -503,7 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const renderOrders = async () => {
+    async function renderOrders() {
         const orders = await getOrders();
         const kanbanWrapper = document.getElementById('kanbanBoardWrapper');
         if (!kanbanWrapper) return;
@@ -562,7 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderDashboard();
     };
 
-    const renderDashboard = async () => {
+    async function renderDashboard() {
         const leads = await getLeads();
         const orders = await getOrders();
 
