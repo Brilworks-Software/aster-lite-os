@@ -4,6 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
         currentView: 'dashboard'
     };
 
+    const PRODUCTS = [
+        "SKU-1001 - LED Panel 12W Square",
+        "SKU-1002 - LED Panel 15W Round",
+        "SKU-2005 - Strip Light 5m RGB",
+        "SKU-3012 - COB Light 15W Focus",
+        "SKU-4050 - High Mast Flood Light",
+        "SKU-5001 - Smart WiFi Bulb 9W"
+    ];
+
     // --- Navigation Logic (Hash Routing) ---
     const navItems = document.querySelectorAll('.sidebar .nav-item');
     const views = document.querySelectorAll('.view');
@@ -290,6 +299,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.supabase) {
         dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
+
+    // Populate Product Dropdowns
+    const populateProductSelects = () => {
+        const selects = ['newLeadProduct', 'stockProductSelect'];
+        selects.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.innerHTML = PRODUCTS.map(p => `<option value="${p}">${p}</option>`).join('');
+            }
+        });
+    };
+    populateProductSelects();
     
     // Fallback Local Storage Database
     const DB_KEY = 'asterLiteDB_v2';
@@ -564,12 +585,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const company = document.getElementById('newLeadCompany').value;
         const source = document.getElementById('newLeadSource').value;
         const assigned = document.getElementById('newLeadAssigned').value;
-        const req = document.getElementById('newLeadReq').value;
         
+        const product = document.getElementById('newLeadProduct').value;
+        const qty = document.getElementById('newLeadQty').value;
+        const notes = document.getElementById('newLeadNotes').value;
+
         if (!name) return alert('Lead name is required');
         
+        // Format requirement string
+        const req = `${qty ? qty + ' ' : ''}${product}${notes ? '\nNotes: ' + notes : ''}`;
+        
         const newLead = {
-            id: 'LD-' + Math.floor(Math.random() * 10000),
+            id: Math.floor(Math.random() * 10000) + 5000, // Explicitly numeric ID for Supabase compatibility
             date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             name, company, source, assigned, req, status: 'New'
         };

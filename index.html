@@ -582,9 +582,7 @@
                                 <div class="form-group" style="margin-bottom: 20px;">
                                     <label>Select Product</label>
                                     <select class="form-control" id="stockProductSelect">
-                                        <option>SKU-1001 - LED Panel 12W Square</option>
-                                        <option>SKU-1002 - LED Panel 15W Round</option>
-                                        <option>SKU-2005 - Strip Light 5m RGB</option>
+                                        <!-- Populated from JS -->
                                     </select>
                                 </div>
                                 <div class="client-grid">
@@ -647,9 +645,19 @@
                                             <option value="RJ">RJ (Sales)</option>
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Select Product</label>
+                                        <select id="newLeadProduct" class="form-control">
+                                            <!-- Populated from JS -->
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Quantity / Pack</label>
+                                        <input type="text" id="newLeadQty" class="form-control" placeholder="E.g. 100x or 5 Boxes">
+                                    </div>
                                     <div class="form-group full-width">
-                                        <label>Requirement</label>
-                                        <textarea id="newLeadReq" class="form-control" rows="2" placeholder="E.g. 100x 12W Square Panels"></textarea>
+                                        <label>Optional Notes</label>
+                                        <textarea id="newLeadNotes" class="form-control" rows="2" placeholder="Any specific requirements or notes..."></textarea>
                                     </div>
                                 </div>
                             </div>
