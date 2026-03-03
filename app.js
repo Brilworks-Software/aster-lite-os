@@ -31,6 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Trigger Render for the target view
+        if (targetView === 'leads') renderLeads();
+        if (targetView === 'orders') renderOrders();
+        if (targetView === 'dashboard') renderDashboard();
+
         // Close sidebar on mobile after selection
         document.querySelector('.sidebar').classList.remove('mobile-active');
         document.getElementById('sidebarOverlay').classList.remove('active');

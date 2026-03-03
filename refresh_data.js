@@ -9,16 +9,16 @@ const headers = {
 };
 
 const leads = [
-    { name: 'Amit Sharma', company: 'Sunrise Lighting', source: 'Website', req: '50x LED Panels', status: 'New', assigned: 'OM', date: '2026-03-03' },
-    { name: 'Priya Patel', company: 'Global Solutions', source: 'Referral', req: '100m Strip Lights', status: 'Contacted', assigned: 'Admin', date: '2026-03-02' },
-    { name: 'Vikram Singh', company: 'Mega Mart', source: 'FB Ads', req: '20x Flood Lights', status: 'New', assigned: 'OM', date: '2026-03-03' },
-    { name: 'Sneha Reddy', company: 'Bright Homes', source: 'LinkedIn', req: '15x Smart Bulbs', status: 'Qualified', assigned: 'Admin', date: '2026-03-01' },
-    { name: 'Rajesh Kumar', company: 'Indus Corp', source: 'Cold Email', req: '200x T5 Tubes', status: 'New', assigned: 'OM', date: '2026-03-03' },
-    { name: 'Anjali Gupta', company: 'City Lights', source: 'Website', req: '10x Chandeliers', status: 'Contacted', assigned: 'Admin', date: '2026-03-02' },
-    { name: 'Suresh Raina', company: 'Sports Academy', source: 'Referral', req: 'High Mast Lighting', status: 'New', assigned: 'OM', date: '2026-03-03' },
-    { name: 'Kavita Iyer', company: 'Zlux Interiors', source: 'Instagram', req: 'Designer Pendants', status: 'Qualified', assigned: 'Admin', date: '2026-03-01' },
-    { name: 'Manoj Bajpayee', company: 'The Theatre Co', source: 'Website', req: 'Stage Lighting Kit', status: 'New', assigned: 'OM', date: '2026-03-03' },
-    { name: 'Rohan Mehra', company: 'Apartment Assoc', source: 'Direct Call', req: 'Security Lights', status: 'Contacted', assigned: 'Admin', date: '2026-03-02' }
+    { id: 1001, name: 'Amit Sharma', company: 'Sunrise Lighting', source: 'Website', req: '50x LED Panels', status: 'New', assigned: 'OM', date: '2026-03-03' },
+    { id: 1002, name: 'Priya Patel', company: 'Global Solutions', source: 'Referral', req: '100m Strip Lights', status: 'Contacted', assigned: 'Admin', date: '2026-03-02' },
+    { id: 1003, name: 'Vikram Singh', company: 'Mega Mart', source: 'FB Ads', req: '20x Flood Lights', status: 'New', assigned: 'OM', date: '2026-03-03' },
+    { id: 1004, name: 'Sneha Reddy', company: 'Bright Homes', source: 'LinkedIn', req: '15x Smart Bulbs', status: 'Qualified', assigned: 'Admin', date: '2026-03-01' },
+    { id: 1005, name: 'Rajesh Kumar', company: 'Indus Corp', source: 'Cold Email', req: '200x T5 Tubes', status: 'New', assigned: 'OM', date: '2026-03-03' },
+    { id: 1006, name: 'Anjali Gupta', company: 'City Lights', source: 'Website', req: '10x Chandeliers', status: 'Contacted', assigned: 'Admin', date: '2026-03-02' },
+    { id: 1007, name: 'Suresh Raina', company: 'Sports Academy', source: 'Referral', req: 'High Mast Lighting', status: 'New', assigned: 'OM', date: '2026-03-03' },
+    { id: 1008, name: 'Kavita Iyer', company: 'Zlux Interiors', source: 'Instagram', req: 'Designer Pendants', status: 'Qualified', assigned: 'Admin', date: '2026-03-01' },
+    { id: 1009, name: 'Manoj Bajpayee', company: 'The Theatre Co', source: 'Website', req: 'Stage Lighting Kit', status: 'New', assigned: 'OM', date: '2026-03-03' },
+    { id: 1010, name: 'Rohan Mehra', company: 'Apartment Assoc', source: 'Direct Call', req: 'Security Lights', status: 'Contacted', assigned: 'Admin', date: '2026-03-02' }
 ];
 
 const orders = [
@@ -37,23 +37,25 @@ const orders = [
 async function refreshData() {
     console.log('Clearing old data...');
     // Delete all leads
-    await fetch(`${url}/rest/v1/leads?id=gt.0`, { method: 'DELETE', headers });
+    await fetch(`${url}/rest/v1/leads?name=neq.null`, { method: 'DELETE', headers });
     // Delete all orders
     await fetch(`${url}/rest/v1/orders?amount=gt.-1`, { method: 'DELETE', headers });
 
     console.log('Inserting 10 new leads...');
-    await fetch(`${url}/rest/v1/leads`, {
+    const r1 = await fetch(`${url}/rest/v1/leads`, {
         method: 'POST',
         headers,
         body: JSON.stringify(leads)
     });
+    console.log('Leads insert status:', r1.status);
 
     console.log('Inserting 10 new orders...');
-    await fetch(`${url}/rest/v1/orders`, {
+    const r2 = await fetch(`${url}/rest/v1/orders`, {
         method: 'POST',
         headers,
         body: JSON.stringify(orders)
     });
+    console.log('Orders insert status:', r2.status);
 
     console.log('Data refresh complete!');
 }
