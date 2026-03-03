@@ -317,9 +317,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const DB_KEY = 'asterLiteDB_v2';
     
     const initLocalDB = () => {
-        let data = localStorage.getItem(DB_KEY);
-        if (!data) {
-            data = {
+        let rawData = localStorage.getItem(DB_KEY);
+        let parsed;
+        
+        if (!rawData) {
+            parsed = {
                 leads: [
                     { id: 'LD-101', date: 'Mar 03, 2026', name: 'Amit Sharma', company: 'Sharma Electricals', source: 'Google', req: '50x 15W COB Lights', status: 'New', assigned: 'OM' },
                     { id: 'LD-102', date: 'Mar 02, 2026', name: 'Sneha Gupta', company: 'Gupta Interiors', source: 'Website', req: 'Wholesale pricing for LED Strips', status: 'Contacted', assigned: 'RJ' },
@@ -351,10 +353,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     { sku: 'SKU-3012', name: 'COB Light 15W Focus', available: 400, reserved: 50, defective: 3, returned: 0 }
                 ]
             };
-            localStorage.setItem(DB_KEY, JSON.stringify(data));
+            localStorage.setItem(DB_KEY, JSON.stringify(parsed));
+        } else {
+            parsed = JSON.parse(rawData);
         }
         
-        const parsed = JSON.parse(data);
         if (!parsed.products) {
             parsed.products = [
                 { sku: 'SKU-1001', name: 'LED Panel 12W Square', available: 1250, reserved: 150, defective: 5, returned: 0 },
