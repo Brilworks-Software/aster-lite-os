@@ -296,9 +296,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Populate Product Dropdowns
     const populateProductSelects = (container = document) => {
         const selects = container.querySelectorAll('.product-select-target, #stockProductSelect');
+        const products = AppState.products || [];
         selects.forEach(el => {
             const currentVal = el.value;
-            el.innerHTML = AppState.products.map(p => {
+            if (products.length === 0) {
+                el.innerHTML = '<option value="">(No products found)</option>';
+                return;
+            }
+            el.innerHTML = products.map(p => {
                 const label = `${p.sku} - ${p.name}`;
                 return `<option value="${label}">${label}</option>`;
             }).join('');
@@ -346,7 +351,16 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             localStorage.setItem(DB_KEY, JSON.stringify(data));
         }
-        return JSON.parse(data);
+        
+        const parsed = JSON.parse(data);
+        if (!parsed.products) {
+            parsed.products = [
+                { sku: 'SKU-1001', name: 'LED Panel 12W Square', available: 1250, reserved: 150, defective: 5, returned: 0 },
+                { sku: 'SKU-1002', name: 'LED Panel 15W Round', available: 840, reserved: 60, defective: 12, returned: 2 }
+            ];
+            localStorage.setItem(DB_KEY, JSON.stringify(parsed));
+        }
+        return parsed;
     };
 
     const saveLocalDB = (data) => {
@@ -631,28 +645,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAddLeadItem = document.getElementById('btnAddLeadItem');
 
     const addLeadItemRow = () => {
+        const container = document.getElementById('leadItemsContainer');
+        if (!container) return;
+
         const div = document.createElement('div');
         div.className = 'lead-item-row';
         div.style.display = 'grid';
         div.style.gridTemplateColumns = '1fr 100px 40px';
         div.style.gap = '10px';
         div.style.alignItems = 'end';
+        div.style.marginBottom = '8px';
 
         div.innerHTML = `
             <div class="form-group">
                 <select class="form-control product-select-target"></select>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control qty-input" placeholder="Qty (e.g. 50x)">
+                <input type="text" class="form-control qty-input" placeholder="Qty">
             </div>
-            <button type="button" class="icon-btn-small remove-item" style="height: 40px; border: 1px solid var(--border-light);"><i class='bx bx-trash'></i></button>
+            <button type="button" class="icon-btn-small remove-item" style="height: 38px; border: 1px solid var(--border-light); border-radius: 6px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-trash'></i></button>
         `;
 
-        leadItemsContainer.appendChild(div);
+        container.appendChild(div);
         populateProductSelects(div);
 
         div.querySelector('.remove-item').addEventListener('click', () => {
-            if (leadItemsContainer.children.length > 1) div.remove();
+            if (container.children.length > 1) div.remove();
         });
     };
 

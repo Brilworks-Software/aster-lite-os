@@ -1552,3 +1552,39 @@ input:checked+.slider:before {
         font-size: 20px;
     }
 }
+
+/* --- Added for Multi-Item Leads --- */
+.primary-btn-small {
+    padding: 6px 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.primary-btn-small:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+#leadItemsContainer {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+#leadItemsContainer::-webkit-scrollbar {
+    width: 4px;
+}
+
+#leadItemsContainer::-webkit-scrollbar-thumb {
+    background: var(--border-light);
+    border-radius: 10px;
+}
