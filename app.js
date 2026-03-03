@@ -287,20 +287,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Fallback Local Storage Database
-    const DB_KEY = 'asterLiteDB';
+    const DB_KEY = 'asterLiteDB_v2';
     
     const initLocalDB = () => {
         let data = localStorage.getItem(DB_KEY);
         if (!data) {
             data = {
                 leads: [
-                    { id: 'LD-001', date: 'Oct 24, 2026', name: 'Rahul Verma', company: 'Verma Electronics', source: 'IndiaMART', req: '100x 12W Square Panels', status: 'New', assigned: 'OM' },
-                    { id: 'LD-002', date: 'Oct 24, 2026', name: 'Priya Singh', company: 'Singh Traders', source: 'Website', req: 'Wholesale Dealership Inquiry', status: 'Contacted', assigned: 'RJ' }
+                    { id: 'LD-101', date: 'Mar 03, 2026', name: 'Amit Sharma', company: 'Sharma Electricals', source: 'Google', req: '50x 15W COB Lights', status: 'New', assigned: 'OM' },
+                    { id: 'LD-102', date: 'Mar 02, 2026', name: 'Sneha Gupta', company: 'Gupta Interiors', source: 'Website', req: 'Wholesale pricing for LED Strips', status: 'Contacted', assigned: 'RJ' },
+                    { id: 'LD-103', date: 'Mar 02, 2026', name: 'Vikram Singh', company: 'Singh Builders', source: 'Referral', req: 'Bulk order for New Project', status: 'New', assigned: 'OM' },
+                    { id: 'LD-104', date: 'Mar 01, 2026', name: 'Kavita Rao', company: 'Rao Lighting', source: 'Facebook', req: '200x 7W Spotlights', status: 'Contacted', assigned: 'RJ' },
+                    { id: 'LD-105', date: 'Mar 01, 2026', name: 'Rajesh Patel', company: 'Patel Agencies', source: 'IndiaMART', req: 'Dealership Inquiry', status: 'New', assigned: 'OM' },
+                    { id: 'LD-106', date: 'Feb 28, 2026', name: 'Meena Kumari', company: 'Kumari Decors', source: 'Instagram', req: '30x Chandelier Bulbs', status: 'Contacted', assigned: 'RJ' },
+                    { id: 'LD-107', date: 'Feb 28, 2026', name: 'Anil Joshi', company: 'Joshi Smart Homes', source: 'Web', req: 'Smart Lighting Solutions', status: 'New', assigned: 'OM' },
+                    { id: 'LD-108', date: 'Feb 27, 2026', name: 'Sunita Deshmukh', company: 'Deshmukh Textiles', source: 'Google', req: 'Factory Highbay Lighting', status: 'Contacted', assigned: 'RJ' },
+                    { id: 'LD-109', date: 'Feb 27, 2026', name: 'Sanjay Gupta', company: 'Gupta Hardware', source: 'Website', req: '500x Batten Lights', status: 'New', assigned: 'OM' },
+                    { id: 'LD-110', date: 'Feb 26, 2026', name: 'Pooja Mehta', company: 'Mehta Architects', source: 'Referral', req: 'Modern Office Lighting', status: 'Contacted', assigned: 'RJ' }
                 ],
                 orders: [
-                    { id: 'ORD-001', title: 'Apex Solutions - 50x LED Panel', amount: 75000, priority: 'high', status: 'lead', assigned: 'OM' },
-                    { id: 'ORD-002', title: 'Bright Tech - 200m Strip Code', amount: 12000, priority: 'low', status: 'lead', assigned: 'RJ' },
-                    { id: 'ORD-003', title: 'Sharma Traders - Bulk Order', amount: 120000, priority: 'medium', status: 'quote', assigned: 'OM' }
+                    { id: 'ORD-101', title: 'Mumbai Metro - Tunnel Lighting', amount: 450000, priority: 'high', status: 'lead', assigned: 'OM' },
+                    { id: 'ORD-102', title: 'Tech Park Bangalore - Office Lights', amount: 275000, priority: 'medium', status: 'quote', assigned: 'RJ' },
+                    { id: 'ORD-103', title: 'Green Valley Resort - Garden LED', amount: 120000, priority: 'low', status: 'order', assigned: 'OM' },
+                    { id: 'ORD-104', title: 'Sunrise Mall - Facade Lighting', amount: 850000, priority: 'high', status: 'dispatch', assigned: 'RJ' },
+                    { id: 'ORD-105', title: 'Hotel Royal - Indoor Panels', amount: 95000, priority: 'medium', status: 'invoice', assigned: 'OM' },
+                    { id: 'ORD-106', title: 'City Hospital - Emergency Lighting', amount: 320000, priority: 'high', status: 'payment', assigned: 'RJ' },
+                    { id: 'ORD-107', title: 'Apex Industries - Highbay Installation', amount: 180000, priority: 'medium', status: 'quote', assigned: 'OM' },
+                    { id: 'ORD-108', title: 'Cozy Homes Apartment - Smart Switches', amount: 55000, priority: 'low', status: 'lead', assigned: 'RJ' },
+                    { id: 'ORD-109', title: 'Global Schools - Classroom Battens', amount: 140000, priority: 'medium', status: 'order', assigned: 'OM' },
+                    { id: 'ORD-110', title: 'PVR Cinemas - Step Lighting', amount: 210000, priority: 'low', status: 'quote', assigned: 'RJ' }
                 ]
             };
             localStorage.setItem(DB_KEY, JSON.stringify(data));

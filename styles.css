@@ -252,6 +252,7 @@ body {
     font-size: 20px;
     cursor: pointer;
     transition: var(--transition);
+    position: relative;
 }
 
 .icon-btn:hover {
@@ -1255,6 +1256,7 @@ input:checked+.slider:before {
     letter-spacing: -1px;
     background: linear-gradient(to right, #fff, #94a3b8);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -1474,6 +1476,42 @@ input:checked+.slider:before {
 
     .form-group.full-width {
         grid-column: span 1;
+    }
+
+    .doc-header {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .doc-title {
+        text-align: left;
+    }
+
+    .meta-grid {
+        align-items: flex-start;
+    }
+
+    .doc-editor {
+        padding: 24px 16px;
+    }
+
+    .doc-actions-bar {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .doc-actions-bar .form-control {
+        width: 100% !important;
+    }
+
+    .action-buttons {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+    }
+
+    .action-buttons button {
+        flex: 1;
     }
 }
 

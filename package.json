@@ -1,0 +1,17 @@
+{
+  "name": "aster-lite-os",
+  "version": "1.0.0",
+  "description": "A high-performance Manufacturing & Operations OS built for B2B lighting manufacturers. Developed by **Dhaval Trivedi**, this platform provides a seamless interface for managing leads, orders, inventory, and team settings.",
+  "main": "app.js",
+  "scripts": {
+    "dev": "http-server ./ -p 8080",
+    "start": "http-server ./ -p 8080",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
