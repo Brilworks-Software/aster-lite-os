@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 view.classList.add('active');
             }
         });
+
+        // Close sidebar on mobile after selection
+        document.querySelector('.sidebar').classList.remove('mobile-active');
+        document.getElementById('sidebarOverlay').classList.remove('active');
     };
 
     navItems.forEach(item => {
@@ -55,6 +59,25 @@ document.addEventListener('DOMContentLoaded', () => {
             switchView(hash);
         }
     });
+
+    // --- Mobile Menu Toggle ---
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('mobile-active');
+            overlay.classList.toggle('active');
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('mobile-active');
+            overlay.classList.remove('active');
+        });
+    }
 
     // --- Global Search Shortcut Logic ---
     const searchInput = document.getElementById('globalSearch');

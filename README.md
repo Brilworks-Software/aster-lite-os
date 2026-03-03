@@ -60,6 +60,52 @@ erDiagram
 
 ---
 
+## 🗺️ User Flow
+
+The following flow chart illustrates the primary navigation path and core interactions within the Operations OS:
+
+```mermaid
+graph TD
+    A[Launch App] --> B{Logged In?}
+    B -- No --> C[Login Screen]
+    C --> D[Credentials Validation]
+    D -- Success --> E[Dashboard]
+    B -- Yes --> E
+
+    E --> F[Sidebar Navigation]
+    
+    F --> G[Leads Directory]
+    G --> G1[Add New Lead]
+    G --> G2[Convert to Quote]
+    
+    F --> H[Order Management]
+    H --> H1[Kanban Board View]
+    H1 --> H2[Drag & Drop Status Update]
+    H1 --> H3[Add New Order]
+    
+    F --> I[Quotes & Invoices]
+    I --> I1[Document Creation Engine]
+    I1 --> I2[Save as Order Inquiry]
+    I1 --> I3[Print / Share]
+    
+    F --> J[Inventory Tracking]
+    J --> J1[Stock Visibility]
+    J1 --> J2[Adjust Stock Levels]
+    
+    F --> K[Team Settings]
+    K --> K1[Profile Management]
+    K1 --> K2[Add Team Member]
+    
+    E --> L[Global Search Shortcut /]
+    L --> M[Search Result Overlay]
+    
+    E --> N[Profile Dropdown]
+    N --> O[Logout]
+    O --> C
+```
+
+---
+
 ## ✨ Features
 - **Dashboard**: High-level overview of daily operations and metrics.
 - **Leads Directory**: Centralized hub for incoming inquiries with auto-routing capability.
