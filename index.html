@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aster Lite | Operations OS</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Using Boxicons for clean, B2B friendly icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-wrapper" style="display: flex;">
+        <div class="login-left">
+            <div class="login-visual-container">
+                <i class='bx bx-hive login-visual-icon'></i>
+                <h1 class="login-visual-title">Aster Lite</h1>
+                <p class="login-visual-subtitle">High-Performance<br>Manufacturing & Operations OS</p>
+                <div class="login-visual-footer">
+                    Built for B2B lighting manufacturers.
+                </div>
+            </div>
+            <div class="login-decor-circle"></div>
+        </div>
+        <div class="login-right">
+            <div class="login-card">
+                <div class="login-header">
+                    <div>
+                        <h2 class="login-title">Welcome Back</h2>
+                        <p class="login-subtitle">Log in to your admin portal.</p>
+                    </div>
+                    <img src="logo.png" alt="Aster Lite Logo" class="login-logo-img">
+                </div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="login-input-wrapper">
+                            <i class='bx bx-envelope'></i>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="admin@asterlite.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 32px;">
+                        <label>Password</label>
+                        <div class="login-input-wrapper">
+                            <i class='bx bx-lock-alt'></i>
+                            <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="primary-btn login-btn" id="btnLoginSubmit">
+                        Sign In <i class='bx bx-right-arrow-alt'></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Content -->
+    <div class="app-container" id="app-content" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class='bx bx-hive'></i>
+                    <span>Aster Lite</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <i class='bx bx-grid-alt'></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-view="leads">
+                    <i class='bx bx-user-pin'></i>
+                    <span>Leads</span>
+                </a>
+                <a href="#" class="nav-item" data-view="quotes-invoices">
+                    <i class='bx bx-receipt'></i>
+                    <span>Quotes & Invoices</span>
+                </a>
+                <a href="#" class="nav-item" data-view="orders">
+                    <i class='bx bx-layout'></i>
+                    <span>Orders (Kanban)</span>
+                </a>
+                <a href="#" class="nav-item" data-view="inventory">
+                    <i class='bx bx-box'></i>
+                    <span>Inventory</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item" data-view="settings">
+                    <i class='bx bx-cog'></i>
+                    <span>Settings</span>
+                </a>
+                <div class="user-profile" style="position: relative; cursor: pointer;" id="userProfileBtn">
+                    <div class="avatar">OM</div>
+                    <div class="info">
+                        <span class="name">Owner</span>
+                        <span class="role">Admin</span>
+                    </div>
+                </div>
+                <!-- Profile Action Popup -->
+                <div id="userProfileDropdown" style="display: none; position: absolute; bottom: 80px; left: 16px; background: var(--bg-card); width: calc(100% - 32px); border-radius: 8px; box-shadow: var(--shadow-lg); border: 1px solid var(--border); overflow: hidden; z-index: 10;">
+                    <button class="notif-item" id="btnLogout" style="width: 100%; text-align: left; background: none; border: none; font-size: 14px; display: flex; align-items: center; gap: 8px; color: var(--danger);"><i class='bx bx-log-out'></i> Log Out</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="search-container">
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="globalSearch" placeholder="Search by lead, customer, order ID, product, or invoice...">
+                    <div class="search-shortcut">/</div>
+                </div>
+                <div class="topbar-actions" style="position: relative;">
+                    <button class="icon-btn" id="btnNotifications" show")"><i class='bx bx-bell'></i><span class="notification-badge">3</span></button>
+                    <!-- Notification Dropdown -->
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="dropdown-header">
+                            <h4>Notifications</h4>
+                            <span class="mark-read">Mark all as read</span>
+                        </div>
+                        <div class="dropdown-list">
+                            <div class="notif-item unread">
+                                <div class="notif-icon"><i class='bx bx-package'></i></div>
+                                <div class="notif-content">
+                                    <p><strong>#ORD-001</strong> requires dispatch.</p>
+                                    <span>2 mins ago</span>
+                                </div>
+                            </div>
+                            <div class="notif-item unread">
+                                <div class="notif-icon"><i class='bx bx-user-pin'></i></div>
+                                <div class="notif-content">
+                                    <p><strong>Rahul Verma</strong> placed a new inquiry.</p>
+                                    <span>1 hour ago</span>
+                                </div>
+                            </div>
+                            <div class="notif-item">
+                                <div class="notif-icon"><i class='bx bx-check-circle'></i></div>
+                                <div class="notif-content">
+                                    <p>Payment received for <strong>#ORD-005</strong>.</p>
+                                    <span>Yesterday</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="primary-btn" id="btnNewQuote"><i class='bx bx-plus'></i> New Quote</button>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div class="views-container">
+                <!-- Dashboard View -->
+                <section id="view-dashboard" class="view active">
+                    <div class="page-header">
+                        <h1>Operations Overview</h1>
+                        <p>Welcome back! Here's what's happening today.</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class='bx bx-user-pin'></i></div>
+                            <div class="stat-info">
+                                <h3>New Leads</h3>
+                                <p class="value">12</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class='bx bx-receipt'></i></div>
+                            <div class="stat-info">
+                                <h3>Pending Quotes</h3>
+                                <p class="value">5</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon"><i class='bx bx-package'></i></div>
+                            <div class="stat-info">
+                                <h3>Orders to Dispatch</h3>
+                                <p class="value">8</p>
+                            </div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-icon"><i class='bx bx-error-circle'></i></div>
+                            <div class="stat-info">
+                                <h3>Defective Stock</h3>
+                                <p class="value">3 Items</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Leads View -->
+                <section id="view-leads" class="view">
+                    <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <h1>Leads Directory</h1>
+                            <p>Manage and auto-assign incoming inquiries.</p>
+                        </div>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 8px; background: var(--bg-card); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border);">
+                                <span style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Auto-Routing</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <button class="primary-btn" ><i class='bx bx-plus'></i> Add Lead</button>
+                        </div>
+                    </div>
+
+                    <div class="inventory-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Lead Name / Company</th>
+                                    <th>Source</th>
+                                    <th>Requirement</th>
+                                    <th>Status</th>
+                                    <th>Assigned To</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leadsTableBody">
+                                <!-- Leads will be rendered here by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Quotes & Invoices View -->
+                <section id="view-quotes-invoices" class="view">
+                    <div class="page-header">
+                        <div>
+                            <h1>Quotation & Invoice Engine</h1>
+                            <p>Generate B2B GST-compliant documents instantly.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="document-engine">
+                        <div class="doc-actions-bar">
+                            <select id="docType" class="form-control" style="width: 200px;">
+                                <option value="QUOTATION">Quotation</option>
+                                <option value="PROFORMA INVOICE">Proforma Invoice</option>
+                                <option value="TAX INVOICE">Tax Invoice</option>
+                            </select>
+                            <div class="action-buttons">
+                                <button class="secondary-btn"><i class='bx bx-save'></i> Save Draft</button>
+                                <button class="primary-btn" ><i class='bx bx-printer'></i> Print / PDF</button>
+                            </div>
+                        </div>
+
+                        <div class="doc-editor" id="printable-doc">
+                            <!-- Document Header -->
+                            <div class="doc-header">
+                                <div class="company-details">
+                                    <img src="logo.png" alt="Aster Lite" style="height: 54px; object-fit: contain; margin-bottom: 12px; display: block;">
+                                    <p><strong>No 18, 2nd Floor, SHRIYAM Industrial Park,</strong></p>
+                                    <p>Nr. Royal Estate, Kathwada Singarva Road,</p>
+                                    <p>Ahmedabad - 382430</p>
+                                    <p style="margin-top: 6px;"><strong>Toll Free:</strong> 1800 202 3653</p>
+                                    <p><strong>Enquiry:</strong> sales@asterledlight.com | <strong>Service:</strong> care@asterledlight.com</p>
+                                </div>
+                                <div class="doc-meta">
+                                    <h1 class="doc-title" id="displayDocTitle">QUOTATION</h1>
+                                    <div class="meta-grid">
+                                        <div class="meta-item">
+                                            <label>Doc No:</label>
+                                            <input type="text" value="QT-2026-001" class="clean-input">
+                                        </div>
+                                        <div class="meta-item">
+                                            <label>Date:</label>
+                                            <input type="date" class="clean-input date-input" id="docDate">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Client Details -->
+                            <div class="bill-to-section">
+                                <h3>Bill To:</h3>
+                                <div class="client-grid">
+                                    <div class="form-group">
+                                        <label>Client Name</label>
+                                        <input type="text" class="form-control" placeholder="Enter B2B client name...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>GSTIN</label>
+                                        <input type="text" class="form-control" placeholder="Client GSTIN">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Billing Address</label>
+                                        <textarea class="form-control" rows="2" placeholder="Full address"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Line Items -->
+                            <div class="line-items-section">
+                                <table class="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Details</th>
+                                            <th width="10%">HSN</th>
+                                            <th width="10%">Qty</th>
+                                            <th width="15%">Rate (₹)</th>
+                                            <th width="10%">Tax %</th>
+                                            <th width="15%" style="text-align: right;">Amount (₹)</th>
+                                            <th width="5%"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lineItemsBody">
+                                        <tr>
+                                            <td><input type="text" class="clean-input desc-input" placeholder="Item Description" value="LED Panel 12W Square"></td>
+                                            <td><input type="text" class="clean-input hsn-input" value="8539"></td>
+                                            <td><input type="number" class="clean-input qty-input" value="100"></td>
+                                            <td><input type="number" class="clean-input rate-input" value="150"></td>
+                                            <td>
+                                                <select class="clean-input tax-input">
+                                                    <option value="18" selected>18%</option>
+                                                    <option value="12">12%</option>
+                                                    <option value="5">5%</option>
+                                                    <option value="0">0%</option>
+                                                </select>
+                                            </td>
+                                            <td class="amount-cell">15,000.00</td>
+                                            <td><button class="icon-btn-small delete-row-btn" ><i class='bx bx-trash'></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button class="secondary-btn add-row-btn" id="btnAddRow"><i class='bx bx-plus'></i> Add Line Item</button>
+                            </div>
+
+                            <!-- Totals -->
+                            <div class="totals-section">
+                                <div class="notes-block">
+                                    <label>Terms & Conditions / Notes:</label>
+                                    <textarea class="form-control" rows="4">1. Payment: 50% Advance, 50% on Dispatch.
+2. Warranty: 1 Year replacement guarantee on manufacturing defects.
+3. Subject to jurisdiction.</textarea>
+                                </div>
+                                <div class="calculation-block">
+                                    <div class="calc-row">
+                                        <span>Subtotal</span>
+                                        <span id="calcSubtotal">₹15,000.00</span>
+                                    </div>
+                                    <div class="calc-row">
+                                        <span>CGST</span>
+                                        <span id="calcCgst">₹1,350.00</span>
+                                    </div>
+                                    <div class="calc-row">
+                                        <span>SGST</span>
+                                        <span id="calcSgst">₹1,350.00</span>
+                                    </div>
+                                    <div class="calc-row total-row">
+                                        <span>Grand Total</span>
+                                        <span id="calcTotal">₹17,700.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Orders View (Kanban) -->
+                <section id="view-orders" class="view">
+                    <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <h1>Order Management</h1>
+                            <p>Track order lifecycle seamlessly via drag and drop.</p>
+                        </div>
+                        <button class="primary-btn" id="btnNewOrder" ><i class='bx bx-plus'></i> New Order</button>
+                    </div>
+                    
+                    <div class="kanban-board" id="kanbanBoardWrapper">
+                        <div class="kanban-board" id="kanbanBoardWrapper">
+                        <!-- Columns will be rendered dynamically -->
+                    </div>
+                </section>
+
+                <!-- Inventory View -->
+                <section id="view-inventory" class="view">
+                    <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div>
+                            <h1>Inventory Tracking</h1>
+                            <p>Real-time stock visibility with flexible status marking.</p>
+                        </div>
+                        <button class="primary-btn" id="btnAdjustStock" ><i class='bx bx-edit-alt'></i> Adjust Stock</button>
+                    </div>
+                    
+                    <div class="inventory-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Item Code</th>
+                                    <th>Product Name</th>
+                                    <th>Available</th>
+                                    <th>Reserved (Orders)</th>
+                                    <th>Defective</th>
+                                    <th>Returned</th>
+                                    <th>Total Physical</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>SKU-1001</strong></td>
+                                    <td>LED Panel 12W Square</td>
+                                    <td><span class="stock-pill stock-available">1,250</span></td>
+                                    <td><span class="stock-pill stock-reserved">150</span></td>
+                                    <td><span class="stock-pill stock-defective">5</span></td>
+                                    <td><span class="stock-pill stock-return">0</span></td>
+                                    <td>1,405</td>
+                                    <td>
+                                        <button class="icon-btn-small" title="Audit Log"><i class='bx bx-history'></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SKU-1002</strong></td>
+                                    <td>LED Panel 15W Round</td>
+                                    <td><span class="stock-pill stock-available">840</span></td>
+                                    <td><span class="stock-pill stock-reserved">0</span></td>
+                                    <td><span class="stock-pill stock-defective">12</span></td>
+                                    <td><span class="stock-pill stock-return">2</span></td>
+                                    <td>854</td>
+                                    <td>
+                                        <button class="icon-btn-small" title="Audit Log"><i class='bx bx-history'></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>SKU-2005</strong></td>
+                                    <td>Strip Light 5m RGB</td>
+                                    <td><span class="stock-pill stock-warning">45</span></td>
+                                    <td><span class="stock-pill stock-reserved">30</span></td>
+                                    <td><span class="stock-pill stock-defective">0</span></td>
+                                    <td><span class="stock-pill stock-return">10</span></td>
+                                    <td>85</td>
+                                    <td>
+                                        <button class="icon-btn-small" title="Audit Log"><i class='bx bx-history'></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Settings View -->
+                <section id="view-settings" class="view">
+                    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h1>Platform Settings</h1>
+                            <p>Manage your account, preferences, and team members.</p>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 32px; align-items: start; margin-top: 24px;">
+                        <!-- Navigation Menu for Settings -->
+                        <div style="background: var(--bg-card); padding: 16px; border-radius: 12px; border: 1px solid var(--border);">
+                            <ul class="settings-nav" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+                                <li class="setting-nav-item active" data-setting="team" style="padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-group'></i> Team Management</li>
+                                <li class="setting-nav-item" data-setting="company" style="padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-building'></i> Company Profile</li>
+                                <li class="setting-nav-item" data-setting="security" style="padding: 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;"><i class='bx bx-lock-alt'></i> Security</li>
+                            </ul>
+                        </div>
+
+                        <div class="settings-content-area">
+                            <!-- Team Management Panel -->
+                            <div class="setting-panel active" id="setting-team" style="background: var(--bg-card); padding: 32px; border-radius: 12px; border: 1px solid var(--border);">
+                                <h3 style="margin-bottom: 24px; color: var(--text-primary);">Add New Team Member</h3>
+                                <div class="client-grid">
+                                    <div class="form-group full-width">
+                                        <label>Email Address</label>
+                                        <input type="email" id="newUserEmail" class="form-control" placeholder="colleague@asterlite.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="password" id="newUserPassword" class="form-control" placeholder="••••••••">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Role</label>
+                                        <select id="newUserRole" class="form-control">
+                                            <option value="Admin">Admin</option>
+                                            <option value="Manager">Manager</option>
+                                            <option value="Sales">Sales Representative</option>
+                                            <option value="Inventory">Inventory Clerk</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 24px; text-align: right;">
+                                    <button class="primary-btn" id="btnCreateUser">Create User</button>
+                                </div>
+
+                                <!-- Team List -->
+                                <div style="margin-top: 48px; border-top: 1px solid var(--border-light); padding-top: 24px;">
+                                    <h4 style="margin-bottom: 16px;">Current Members</h4>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border: 1px solid var(--border-light); border-radius: 8px; margin-bottom: 8px;">
+                                        <div style="display: flex; gap: 12px; align-items: center;">
+                                            <div class="avatar-sm">OM</div>
+                                            <div><strong>Owner (Admin)</strong><br><span style="font-size: 12px; color: var(--text-tertiary);">admin@asterlite.com</span></div>
+                                        </div>
+                                        <span class="stock-pill stock-available">Active</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Company Profile Panel -->
+                            <div class="setting-panel" id="setting-company" style="display: none; background: var(--bg-card); padding: 32px; border-radius: 12px; border: 1px solid var(--border);">
+                                <h3 style="margin-bottom: 24px;">Company Details</h3>
+                                <div class="client-grid">
+                                    <div class="form-group full-width">
+                                        <label>Company Name</label>
+                                        <input type="text" class="form-control" value="Aster Lite" readonly>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Address</label>
+                                        <textarea class="form-control" readonly>No 18, 2nd Floor, SHRIYAM Industrial Park, Nr. Royal Estate, Kathwada Singarva Road, Ahmedabad - 382430</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Toll Free Number</label>
+                                        <input type="text" class="form-control" value="1800 202 3653" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Sales Email</label>
+                                        <input type="email" class="form-control" value="sales@asterledlight.com" readonly>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 24px; text-align: right;">
+                                    <button class="primary-btn">Update Profile</button>
+                                </div>
+                            </div>
+
+                            <!-- Security Panel -->
+                            <div class="setting-panel" id="setting-security" style="display: none; background: var(--bg-card); padding: 32px; border-radius: 12px; border: 1px solid var(--border);">
+                                <h3 style="margin-bottom: 24px;">Security Options</h3>
+                                <div class="form-group full-width">
+                                    <label>Change Password</label>
+                                    <input type="password" class="form-control" placeholder="New Password" style="margin-bottom: 12px;">
+                                    <input type="password" class="form-control" placeholder="Confirm New Password">
+                                </div>
+                                <div style="margin-top: 24px; text-align: right;">
+                                    <button class="primary-btn">Update Security</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Stock Adjustment Modal -->
+                    <div class="modal-overlay" id="stockModal">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <h2>Adjust Inventory</h2>
+                                <button class="icon-btn-small" id="closeStockModal" ><i class='bx bx-x'></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group" style="margin-bottom: 20px;">
+                                    <label>Select Product</label>
+                                    <select class="form-control">
+                                        <option>SKU-1001 - LED Panel 12W Square</option>
+                                        <option>SKU-1002 - LED Panel 15W Round</option>
+                                        <option>SKU-2005 - Strip Light 5m RGB</option>
+                                    </select>
+                                </div>
+                                <div class="client-grid">
+                                    <div class="form-group">
+                                        <label>Adjustment Type</label>
+                                        <select class="form-control">
+                                            <option>Add New Stock (+)</option>
+                                            <option>Mark as Defective (-)</option>
+                                            <option>Process Return (+)</option>
+                                            <option>Write-off Loss (-)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Quantity</label>
+                                        <input type="number" class="form-control" value="1">
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Reason / Notes</label>
+                                        <textarea class="form-control" rows="2" placeholder="E.g., Batch 4B QA failure"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="padding: 24px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 16px;">
+                                <button class="secondary-btn" >Cancel</button>
+                                <button class="primary-btn" >Save Adjustment</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Lead Modal -->
+                    <div class="modal-overlay" id="leadModal">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <h2>Add New Lead</h2>
+                                <button class="icon-btn-small" ><i class='bx bx-x'></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="client-grid">
+                                    <div class="form-group">
+                                        <label>Lead Name</label>
+                                        <input type="text" id="newLeadName" class="form-control" placeholder="E.g. Rahul Verma">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Company</label>
+                                        <input type="text" id="newLeadCompany" class="form-control" placeholder="E.g. Verma Electronics">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Source</label>
+                                        <select id="newLeadSource" class="form-control">
+                                            <option value="IndiaMART">IndiaMART</option>
+                                            <option value="Website">Website</option>
+                                            <option value="Referral">Referral</option>
+                                            <option value="Direct">Direct</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Assigned To</label>
+                                        <select id="newLeadAssigned" class="form-control">
+                                            <option value="OM">OM (Owner)</option>
+                                            <option value="RJ">RJ (Sales)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Requirement</label>
+                                        <textarea id="newLeadReq" class="form-control" rows="2" placeholder="E.g. 100x 12W Square Panels"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="padding: 24px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 16px;">
+                                <button class="secondary-btn" >Cancel</button>
+                                <button class="primary-btn" id="btnSaveLead">Save Lead</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Order Modal -->
+                    <div class="modal-overlay" id="orderModal">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <h2>Create New Order</h2>
+                                <button class="icon-btn-small" ><i class='bx bx-x'></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="client-grid">
+                                    <div class="form-group">
+                                        <label>Client Name</label>
+                                        <input type="text" id="newOrderClient" class="form-control" placeholder="Client or Company Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Amount (₹)</label>
+                                        <input type="number" id="newOrderAmount" class="form-control" placeholder="0.00">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Priority</label>
+                                        <select id="newOrderPriority" class="form-control">
+                                            <option value="low">Low</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="high">High</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Status</label>
+                                        <select id="newOrderStatus" class="form-control">
+                                            <option value="lead">Lead</option>
+                                            <option value="quote">Quote</option>
+                                            <option value="order">Order</option>
+                                            <option value="dispatch">Dispatch</option>
+                                            <option value="invoice">Invoice</option>
+                                            <option value="payment">Payment</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group full-width">
+                                        <label>Items / Description</label>
+                                        <textarea id="newOrderDesc" class="form-control" rows="2" placeholder="Brief description of items"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="padding: 24px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 16px;">
+                                <button class="secondary-btn" >Cancel</button>
+                                <button class="primary-btn" id="btnSaveOrder">Create Order</button>
+                            </div>
+                        </div>
+                    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+</body>
+</html>
