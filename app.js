@@ -1,17 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Top-Level Application State
     const AppState = {
-        currentView: 'dashboard'
+        currentView: 'dashboard',
+        products: []
     };
-
-    const PRODUCTS = [
-        "SKU-1001 - LED Panel 12W Square",
-        "SKU-1002 - LED Panel 15W Round",
-        "SKU-2005 - Strip Light 5m RGB",
-        "SKU-3012 - COB Light 15W Focus",
-        "SKU-4050 - High Mast Flood Light",
-        "SKU-5001 - Smart WiFi Bulb 9W"
-    ];
 
     // --- Navigation Logic (Hash Routing) ---
     const navItems = document.querySelectorAll('.sidebar .nav-item');
@@ -44,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetView === 'leads') renderLeads();
         if (targetView === 'orders') renderOrders();
         if (targetView === 'dashboard') renderDashboard();
+        if (targetView === 'inventory') renderInventory();
 
         // Close sidebar on mobile after selection
         document.querySelector('.sidebar').classList.remove('mobile-active');
@@ -306,11 +299,13 @@ document.addEventListener('DOMContentLoaded', () => {
         selects.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                el.innerHTML = PRODUCTS.map(p => `<option value="${p}">${p}</option>`).join('');
+                el.innerHTML = AppState.products.map(p => {
+                    const label = `${p.sku} - ${p.name}`;
+                    return `<option value="${label}">${label}</option>`;
+                }).join('');
             }
         });
     };
-    populateProductSelects();
     
     // Fallback Local Storage Database
     const DB_KEY = 'asterLiteDB_v2';
@@ -342,6 +337,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'ORD-108', title: 'Cozy Homes Apartment - Smart Switches', amount: 55000, priority: 'low', status: 'lead', assigned: 'RJ' },
                     { id: 'ORD-109', title: 'Global Schools - Classroom Battens', amount: 140000, priority: 'medium', status: 'order', assigned: 'OM' },
                     { id: 'ORD-110', title: 'PVR Cinemas - Step Lighting', amount: 210000, priority: 'low', status: 'quote', assigned: 'RJ' }
+                ],
+                products: [
+                    { sku: 'SKU-1001', name: 'LED Panel 12W Square', available: 1250, reserved: 150, defective: 5, returned: 0 },
+                    { sku: 'SKU-1002', name: 'LED Panel 15W Round', available: 840, reserved: 60, defective: 12, returned: 2 },
+                    { sku: 'SKU-2005', name: 'Strip Light 5m RGB', available: 45, reserved: 30, defective: 0, returned: 10 },
+                    { sku: 'SKU-3012', name: 'COB Light 15W Focus', available: 400, reserved: 50, defective: 3, returned: 0 }
                 ]
             };
             localStorage.setItem(DB_KEY, JSON.stringify(data));
@@ -357,7 +358,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dbClient) {
             const { data, error } = await dbClient.from('leads').select('*').order('id', { ascending: false });
             if (!error) return data;
-            console.warn("Supabase Error (Leads): table likely not created yet. Falling back to LocalStorage.");
         }
         return initLocalDB().leads;
     };
@@ -366,15 +366,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dbClient) {
             const { data, error } = await dbClient.from('orders').select('*').order('id', { ascending: false });
             if (!error) return data;
-            console.warn("Supabase Error (Orders): table likely not created yet. Falling back to LocalStorage.");
         }
         return initLocalDB().orders;
+    };
+
+    const getProducts = async () => {
+        if (dbClient) {
+            const { data, error } = await dbClient.from('products').select('*').order('sku', { ascending: true });
+            if (!error) {
+                AppState.products = data;
+                populateProductSelects();
+                return data;
+            }
+        }
+        const localProducts = initLocalDB().products;
+        AppState.products = localProducts;
+        populateProductSelects();
+        return localProducts;
     };
     
     const insertLead = async (lead) => {
         if (dbClient) {
-            const { data, error } = await dbClient.from('leads').insert([lead]);
-            if (!error) return;
+            await dbClient.from('leads').insert([lead]);
         }
         const db = initLocalDB();
         db.leads.unshift(lead);
@@ -383,12 +396,21 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const insertOrder = async (order) => {
         if (dbClient) {
-            const { data, error } = await dbClient.from('orders').insert([order]);
-            if (!error) return;
+            await dbClient.from('orders').insert([order]);
         }
         const db = initLocalDB();
         db.orders.push(order);
         saveLocalDB(db);
+    };
+
+    const insertProduct = async (product) => {
+        if (dbClient) {
+            await dbClient.from('products').insert([product]);
+        }
+        const db = initLocalDB();
+        db.products.push(product);
+        saveLocalDB(db);
+        await getProducts(); // Refresh local list
     };
     
     const updateOrderStatus = async (orderId, newStatus) => {
@@ -432,6 +454,31 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         });
         renderDashboard();
+    };
+
+    const renderInventory = async () => {
+        const products = await getProducts();
+        const tbody = document.querySelector('#view-inventory tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+        products.forEach(p => {
+            const total = (p.available || 0) + (p.reserved || 0) + (p.defective || 0) + (p.returned || 0);
+            const stockLevelClass = p.available < 50 ? 'stock-warning' : 'stock-available';
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${p.sku}</strong></td>
+                    <td>${p.name}</td>
+                    <td><span class="stock-pill ${stockLevelClass}">${(p.available || 0).toLocaleString()}</span></td>
+                    <td><span class="stock-pill stock-reserved">${(p.reserved || 0).toLocaleString()}</span></td>
+                    <td><span class="stock-pill stock-defective">${(p.defective || 0).toLocaleString()}</span></td>
+                    <td><span class="stock-pill stock-return">${(p.returned || 0).toLocaleString()}</span></td>
+                    <td>${total.toLocaleString()}</td>
+                    <td><button class="icon-btn-small" title="Audit Log"><i class='bx bx-history'></i></button></td>
+                </tr>
+            `;
+        });
     };
 
     const renderOrders = async () => {
@@ -626,6 +673,36 @@ document.addEventListener('DOMContentLoaded', () => {
         renderOrders();
     });
 
+    // --- New Product Modal Handlers ---
+    const productModal = document.getElementById('productModal');
+    const btnNewProduct = document.getElementById('btnNewProduct');
+    const btnSaveProduct = document.getElementById('btnSaveProduct');
+    const closeProductModal = document.getElementById('closeProductModal');
+    const cancelProductBtn = document.getElementById('cancelProductBtn');
+
+    btnNewProduct?.addEventListener('click', () => {
+        productModal.classList.add('show');
+    });
+
+    const hideProductModal = () => productModal.classList.remove('show');
+    closeProductModal?.addEventListener('click', hideProductModal);
+    cancelProductBtn?.addEventListener('click', hideProductModal);
+
+    btnSaveProduct?.addEventListener('click', async () => {
+        const sku = document.getElementById('newProductSKU').value;
+        const name = document.getElementById('newProductName').value;
+        const stock = parseInt(document.getElementById('newProductStock').value) || 0;
+
+        if (!sku || !name) return alert('SKU and Product Name are required');
+
+        await insertProduct({
+            sku, name, available: stock, reserved: 0, defective: 0, returned: 0
+        });
+
+        hideProductModal();
+        renderInventory();
+    });
+
     // Create App User
     const btnCreateUser = document.getElementById('btnCreateUser');
     if (btnCreateUser) {
@@ -713,6 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize the DB & Views
     initLocalDB();
+    getProducts(); // Initial product load
     renderLeads();
     renderOrders();
 

@@ -394,7 +394,10 @@
                             <h1>Inventory Tracking</h1>
                             <p>Real-time stock visibility with flexible status marking.</p>
                         </div>
-                        <button class="primary-btn" id="btnAdjustStock" ><i class='bx bx-edit-alt'></i> Adjust Stock</button>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="secondary-btn" id="btnNewProduct" style="background: var(--bg-card); border: 1px solid var(--border);"><i class='bx bx-plus'></i> New Product</button>
+                            <button class="primary-btn" id="btnAdjustStock" ><i class='bx bx-edit-alt'></i> Adjust Stock</button>
+                        </div>
                     </div>
                     
                     <div class="inventory-table-wrapper">
@@ -713,6 +716,34 @@
                             <div class="modal-footer" style="padding: 24px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 16px;">
                                 <button class="secondary-btn" >Cancel</button>
                                 <button class="primary-btn" id="btnSaveOrder">Create Order</button>
+                            </div>
+                        </div>
+                    <!-- New Product Modal -->
+                    <div class="modal-overlay" id="productModal">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <h2>Add New Product</h2>
+                                <button class="icon-btn-small" id="closeProductModal"><i class='bx bx-x'></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="client-grid">
+                                    <div class="form-group">
+                                        <label>SKU / Item Code</label>
+                                        <input type="text" id="newProductSKU" class="form-control" placeholder="E.g. SKU-6001">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Product Name</label>
+                                        <input type="text" id="newProductName" class="form-control" placeholder="E.g. LED Street Light">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Initial Available Stock</label>
+                                        <input type="number" id="newProductStock" class="form-control" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="padding: 24px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 16px;">
+                                <button class="secondary-btn" id="cancelProductBtn">Cancel</button>
+                                <button class="primary-btn" id="btnSaveProduct">Save Product</button>
                             </div>
                         </div>
                     </div>
