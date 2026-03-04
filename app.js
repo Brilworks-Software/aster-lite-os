@@ -41,6 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Close sidebar on mobile after selection
         document.querySelector('.sidebar').classList.remove('mobile-active');
         document.getElementById('sidebarOverlay').classList.remove('active');
+        
+        const mToggleIcon = document.querySelector('#mobileMenuToggle i');
+        if (mToggleIcon) mToggleIcon.classList.replace('bx-x', 'bx-menu');
     };
 
     navItems.forEach(item => {
@@ -76,6 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileToggle.addEventListener('click', () => {
             sidebar.classList.toggle('mobile-active');
             overlay.classList.toggle('active');
+            const icon = mobileToggle.querySelector('i');
+            if (icon) {
+                if (sidebar.classList.contains('mobile-active')) {
+                    icon.classList.replace('bx-menu', 'bx-x');
+                } else {
+                    icon.classList.replace('bx-x', 'bx-menu');
+                }
+            }
         });
     }
 
@@ -83,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.addEventListener('click', () => {
             sidebar.classList.remove('mobile-active');
             overlay.classList.remove('active');
+            const icon = mobileToggle.querySelector('i');
+            if (icon) icon.classList.replace('bx-x', 'bx-menu');
         });
     }
 

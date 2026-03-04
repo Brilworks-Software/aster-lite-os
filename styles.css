@@ -893,7 +893,7 @@ input:checked+.slider:before {
     border-radius: 12px;
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 .data-table {
@@ -1415,6 +1415,7 @@ input:checked+.slider:before {
         top: 0;
         height: 100%;
         transition: 0.3s ease;
+        z-index: 1000;
     }
 
     .sidebar.mobile-active {
@@ -1457,6 +1458,15 @@ input:checked+.slider:before {
 
     .views-container {
         padding: 24px 16px;
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    .inventory-table-wrapper {
+        width: calc(100vw - 32px);
+        /* 100vw minus views-container padding */
+        max-width: 100%;
+        overflow-x: auto;
     }
 
     .page-header {
@@ -1532,6 +1542,10 @@ input:checked+.slider:before {
 
     .items-table {
         min-width: 600px;
+    }
+
+    .data-table {
+        min-width: 800px;
     }
 
     .doc-actions-bar select {
